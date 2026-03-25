@@ -4,7 +4,7 @@
  * Reading Progress Bar Plugin
  *
  * Plugin Name:       Reading Progress Bar
- * Plugin URI:        https://github.com/pradeepvegeta/
+ * Plugin URI:        https://github.com/pradeepvegeta/reading-progress-bar-react
  * Description:       Display a progress bar indicating reading progress on the frontend.
  * Version:           1.0.0
  * Requires at least: 6.8
@@ -55,8 +55,10 @@ class Reading_Progress_Bar
     public function __construct()
     {
         add_action('admin_menu', [$this, 'reading_progress_bar_settings_page']);
-        add_action('admin_enqueue_scripts', [$this, 'reading_progress_bar_settings_page_enqueue_style_script']);
+        add_action('admin_enqueue_scripts', [$this, 'reading_progress_bar_settings_page_enqueue_script']);
+        add_action('wp_enqueue_scripts', [$this, 'reading_progress_bar_settings_page_enqueue_style']);
         add_action('init', [$this, 'reading_progress_bar_settings']);
+        add_action('wp_body_open', [$this, 'reading_progress_bar_front_page']);
     }
 
     /**
@@ -100,7 +102,7 @@ class Reading_Progress_Bar
      * @since 1.0.0
      * @param string $admin_page The current admin page.
      */
-    function reading_progress_bar_settings_page_enqueue_style_script($admin_page)
+    function reading_progress_bar_settings_page_enqueue_script($admin_page)
     {
         if ('settings_page_reading-progress-bar' !== $admin_page) {
             return;
@@ -123,6 +125,17 @@ class Reading_Progress_Bar
                 'in_footer' => true,
             )
         );
+    }
+
+    function reading_progress_bar_settings_page_enqueue_style()
+    {
+        $asset_file = plugin_dir_path(__FILE__) . 'build/index.asset.php';
+
+        if (! file_exists($asset_file)) {
+            return;
+        }
+
+        $asset = include $asset_file;
 
         wp_enqueue_style(
             'reading-progress-bar-style',
@@ -148,18 +161,34 @@ class Reading_Progress_Bar
     public function reading_progress_bar_settings()
     {
         $default = array(
+            'height'   => '8',
             'posttype' => 'post',
             'color'    => '#000',
+            'foreground_color' => '#000',
+            'position' => 'top',
+            'adjust_position' => '30',
         );
 
         $schema  = array(
             'type'       => 'object',
             'properties' => array(
+                'height' => array(
+                    'type' => 'number',
+                ),
                 'posttype' => array(
                     'type' => 'string',
                 ),
                 'color' => array(
                     'type' => 'string',
+                ),
+                'foreground_color' => array(
+                    'type' => 'string',
+                ),
+                'position' => array(
+                    'type' => 'string',
+                ),
+                'adjust_position' => array(
+                    'type' => 'number',
                 ),
             ),
         );
@@ -175,6 +204,29 @@ class Reading_Progress_Bar
                 ),
             )
         );
+    }
+
+    public function reading_progress_bar_front_page()
+    {
+        $options = get_option('reading_progress_bar');
+
+        if (!$options['posttype']) {
+            return;
+        }
+
+        if (is_singular() && $options['posttype'] == get_post_type()) {
+            $css = \WP_Style_Engine::compile_css(
+                array(
+                    'background' => $options['color'],
+                ),
+                ''
+            );
+
+            printf(
+                '<div id="progress" style="%s"></div>',
+                esc_attr($css)
+            );
+        }
     }
 }
 

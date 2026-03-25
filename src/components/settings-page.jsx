@@ -14,6 +14,8 @@ import {
     Button,
     RadioControl,
     BaseControl,
+    RangeControl,
+    SelectControl,
     ColorPalette,
     Panel,
     PanelBody,
@@ -103,6 +105,14 @@ const SettingsPage = () => {
         setSelectedPostType,
         color,
         setColor,
+        height,
+		setHeight,
+		fgclor,
+		setFgColor,
+		position,
+		setPosition,
+		adjustposition,
+		setAdjustPosition,
         saveSettings,
     } = processSettings();
 
@@ -110,7 +120,7 @@ const SettingsPage = () => {
     const postTypeOptions = PostTypesRadio();
 
     return (
-        <VStack spacing={4}>
+        <VStack spacing={8}>
             <SettingsTitle />
             <Notices />
             <Panel>
@@ -135,6 +145,38 @@ const SettingsPage = () => {
                             </div>
                         </BaseControl>
                     </PanelRow>
+                    <PanelRow>
+                        <BaseControl label="Select Foreground Color">
+                            <div style={{ maxWidth: '500px' }}>
+                                <ColorPalette
+                                    colors={colorPalette}
+                                    value={fgclor}
+                                    onChange={(fgclor) => setFgColor(fgclor)}
+                                />
+                            </div>
+                        </BaseControl>
+                    </PanelRow>
+                    <PanelRow>
+                        <RangeControl
+                            label={ __( 'Progress Bar Height', 'reading-progress-bar' ) }
+                            value = { height }
+                            onChange={ ( value ) => setHeight( value ) }
+                            min={ 0 }
+                            max={ 100 }>
+                        </RangeControl>
+                    </PanelRow>
+                     <PanelRow>
+                        <SelectControl
+                            label={ __( 'Position', 'reading-progress-bar' ) }
+                            value={ position }
+                            options={ [
+                                { label: 'Top', value: 'top' },
+                                { label: 'Bottom', value: 'bottom' },
+                            ] }
+                            onChange={ ( newPosition ) => setPosition( newPosition ) }
+                            __next40pxDefaultSize
+                        />
+                     </PanelRow>
                 </PanelBody>
             </Panel>
             <SaveButton onClick={saveSettings} />

@@ -27,7 +27,7 @@ reading-progress-bar/
 │   ├── index.css                      # Compiled styles
 │   └── index.asset.php                # Script/style dependencies
 ├── composer.json                      # PHP dependencies (if any)
-└── DOCUMENTATION.md                   # This file
+└── README.md                   # This file
 ```
 
 ## File Documentation

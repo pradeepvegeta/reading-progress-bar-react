@@ -27,6 +27,10 @@ import { useDispatch } from '@wordpress/data';
 const processSettings = () => {
 	const [ selectedPostType, setSelectedPostType ] = useState( '' );
 	const [ color, setColor ] = useState ( '#000' );
+	const [ height, setHeight ] = useState ( '8' );
+	const [ fgclor, setFgColor ] = useState ( '#000' );
+	const [ position, setPosition ] = useState ( 'top' );
+	const [ adjustposition, setAdjustPosition ] = useState ( '32' );
 
 	const { createSuccessNotice } = useDispatch( noticesStore );
 
@@ -35,8 +39,13 @@ const processSettings = () => {
 	 */
 	useEffect( () => {
 		apiFetch( { path: '/wp/v2/settings' } ).then( ( settings ) => {
+			console.log(settings);
 			setSelectedPostType( settings.reading_progress_bar.posttype );
 			setColor( settings.reading_progress_bar.color );
+			setHeight( settings.reading_progress_bar.height );
+			setFgColor( settings.reading_progress_bar.foreground_color );
+			setPosition( settings.reading_progress_bar.position );
+			setAdjustPosition( settings.reading_progress_bar.adjust_position );
 		} );
 	}, [] );
 
@@ -51,6 +60,10 @@ const processSettings = () => {
 				reading_progress_bar: {
 					posttype: selectedPostType,
 					color,
+					height,
+					fgclor,
+					position,
+					adjustposition
 				},
 			},
 		} ).then( () => {
@@ -65,6 +78,14 @@ const processSettings = () => {
 		setSelectedPostType,
 		color,
 		setColor,
+		height,
+		setHeight,
+		fgclor,
+		setFgColor,
+		position,
+		setPosition,
+		adjustposition,
+		setAdjustPosition,
 		saveSettings,
 	};
 };
