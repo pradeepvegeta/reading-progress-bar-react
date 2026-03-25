@@ -162,10 +162,10 @@ const SettingsPage = () => {
                             value = { height }
                             onChange={ ( value ) => setHeight( value ) }
                             min={ 0 }
-                            max={ 100 }>
-                        </RangeControl>
+                            max={ 100 }
+                        />
                     </PanelRow>
-                     <PanelRow>
+                    <PanelRow>
                         <SelectControl
                             label={ __( 'Position', 'reading-progress-bar' ) }
                             value={ position }
@@ -176,7 +176,18 @@ const SettingsPage = () => {
                             onChange={ ( newPosition ) => setPosition( newPosition ) }
                             __next40pxDefaultSize
                         />
-                     </PanelRow>
+                    </PanelRow>
+                    {position ? (
+                        <PanelRow>
+                            <RangeControl
+                                label={ __( 'Adjust Potion', 'reading-progress-bar' ) }
+                                value = { adjustposition }
+                                onChange={ ( value ) => setAdjustPosition( value ) }
+                                min={ 0 }
+                                max={ 100 }
+                            />
+                        </PanelRow>
+                    ) : null}
                 </PanelBody>
             </Panel>
             <SaveButton onClick={saveSettings} />
