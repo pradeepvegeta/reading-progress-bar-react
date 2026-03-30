@@ -164,7 +164,6 @@ class Reading_Progress_Bar
             'height'   => '8',
             'posttype' => 'post',
             'color'    => '#000',
-            'foreground_color' => '#000',
             'position' => 'top',
             'adjust_position' => '30',
         );
@@ -179,9 +178,6 @@ class Reading_Progress_Bar
                     'type' => 'string',
                 ),
                 'color' => array(
-                    'type' => 'string',
-                ),
-                'foreground_color' => array(
                     'type' => 'string',
                 ),
                 'position' => array(

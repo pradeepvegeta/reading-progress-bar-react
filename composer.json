@@ -9,15 +9,11 @@
 		}
 	],
 	"require": {
-		"php": ">=7.4"
+		"php": ">=8.0"
 	},
-	"autoload": {
-      "psr-4": {
-          "Reading_Progress_Bar\\": "Functions/"
-      }
-  	},
 	"require-dev": {
 		"ergebnis/composer-normalize": "^2.42",
+		"php-stubs/wordpress-stubs": "^6.0",
 		"phpcompatibility/phpcompatibility-wp": "*",
 		"roots/wordpress": "~6.9",
 		"wp-coding-standards/wpcs": "^3.0"

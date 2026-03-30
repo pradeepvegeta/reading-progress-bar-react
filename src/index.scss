@@ -1,18 +1,55 @@
+/**
+ * Reading Progress Bar - Frontend Styles
+ *
+ * Implements a scroll-driven reading progress indicator using the
+ * CSS Scroll Timeline API (scroll-driven animations spec). No JavaScript
+ * is required at runtime — the bar grows purely via CSS animation.
+ *
+ * Browser support: Chrome 115+, Edge 115+, Firefox 110+ (with flag), Safari 18+.
+ * On unsupported browsers the #progress element remains hidden (scaleX(0)).
+ *
+ * @since 1.0.0
+ */
+
+/**
+ * Attach a named scroll timeline to the root <html> element.
+ *
+ * `--page-scroll` becomes the timeline name referenced by the animation below.
+ * `block` means the timeline tracks vertical (block-axis) scroll progress —
+ * 0% at the top of the page, 100% at the bottom.
+ */
 html {
     scroll-timeline: --page-scroll block;
 }
 
+/**
+ * The progress bar element.
+ *
+ * - Fixed positioning pins it to the viewport edge (top/bottom offset and
+ *   height are overridden by inline styles injected from saved plugin settings).
+ * - `transform-origin: 0 50%` sets the scale pivot to the left-centre so the
+ *   bar grows from left to right as the user scrolls.
+ * - `animation-timeline: --page-scroll` links the animation progress to the
+ *   scroll position rather than elapsed time, so no duration is needed.
+ * - `animation: auto linear` defers timing to the timeline (auto = full range).
+ */
 #progress {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 1em;
+    height: 1em; /* fallback; overridden by the PHP-injected inline style */
     transform-origin: 0 50%;
     animation: grow-progress auto linear;
     animation-timeline: --page-scroll;
 }
 
+/**
+ * Keyframes: scale the bar from zero width (scaleX 0) to full width (scaleX 1).
+ *
+ * Because the animation is scroll-driven, `from` maps to the top of the page
+ * and `to` maps to the bottom — no time-based easing applies.
+ */
 @keyframes grow-progress {
     from {
         transform: scaleX(0);

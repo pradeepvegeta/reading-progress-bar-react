@@ -1,5 +1,5 @@
 {
-	"landingPage": "/wp-admin/admin.php?page=reading-progress-bar",
+	"landingPage": "/wp-admin/options-general.php?page=reading-progress-bar",
 	"preferredVersions": {
 		"php": "8.3",
 		"wp": "6.9"
@@ -10,7 +10,7 @@
 			"step": "installPlugin",
 			"pluginData": {
 				"resource": "url",
-				"url": "https://raw.githubusercontent.com/wptrainingteam/unadorned-announcement-bar/main/playground/release/1.0.2.zip"
+				"url": "https://raw.githubusercontent.com/pradeepvegeta/reading-progress-bar-react/main/playground/release/1.0.0.zip"
 			},
 			"options": {
 				"activate": true

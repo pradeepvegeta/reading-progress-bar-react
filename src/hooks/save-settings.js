@@ -18,35 +18,45 @@ import { useDispatch } from '@wordpress/data';
  * Custom hook for managing reading progress bar settings
  *
  * @returns {Object} Settings state and functions
- * @returns {string} returns.selectedPostType - Currently selected post type
+ * @returns {string}   returns.selectedPostType    - Currently selected post type
  * @returns {Function} returns.setSelectedPostType - Update selected post type
- * @returns {string} returns.color - Currently selected color
- * @returns {Function} returns.setColor - Update selected color
- * @returns {Function} returns.saveSettings - Save settings to database
+ * @returns {string}   returns.color               - Currently selected background color
+ * @returns {Function} returns.setColor            - Update background color
+ * @returns {number}   returns.height              - Progress bar height in px
+ * @returns {Function} returns.setHeight           - Update height
+ * @returns {string}   returns.position            - Bar position ('top' or 'bottom')
+ * @returns {Function} returns.setPosition         - Update position
+ * @returns {number}   returns.adjustPosition      - Offset from edge in px
+ * @returns {Function} returns.setAdjustPosition   - Update offset
+ * @returns {Function} returns.saveSettings        - Save settings to database
  */
 const processSettings = () => {
 	const [ selectedPostType, setSelectedPostType ] = useState( '' );
-	const [ color, setColor ] = useState ( '#000' );
-	const [ height, setHeight ] = useState ( '8' );
-	const [ fgclor, setFgColor ] = useState ( '#000' );
-	const [ position, setPosition ] = useState ( 'top' );
-	const [ adjustposition, setAdjustPosition ] = useState ( '32' );
+	const [ color, setColor ] = useState( '#000000' );
+	const [ height, setHeight ] = useState( 8 );
+	const [ position, setPosition ] = useState( 'top' );
+	const [ adjustPosition, setAdjustPosition ] = useState( 30 );
 
-	const { createSuccessNotice } = useDispatch( noticesStore );
+	const { createSuccessNotice, createErrorNotice } = useDispatch( noticesStore );
 
 	/**
 	 * Fetch settings from WordPress REST API on component mount
 	 */
 	useEffect( () => {
-		apiFetch( { path: '/wp/v2/settings' } ).then( ( settings ) => {
-			console.log(settings);
-			setSelectedPostType( settings.reading_progress_bar.posttype );
-			setColor( settings.reading_progress_bar.color );
-			setHeight( settings.reading_progress_bar.height );
-			setFgColor( settings.reading_progress_bar.foreground_color );
-			setPosition( settings.reading_progress_bar.position );
-			setAdjustPosition( settings.reading_progress_bar.adjust_position );
-		} );
+		apiFetch( { path: '/wp/v2/settings' } )
+			.then( ( settings ) => {
+				const rpb = settings.reading_progress_bar;
+				setSelectedPostType( rpb.posttype );
+				setColor( rpb.color );
+				setHeight( rpb.height );
+				setPosition( rpb.position );
+				setAdjustPosition( rpb.adjust_position );
+			} )
+			.catch( () => {
+				createErrorNotice(
+					__( 'Failed to load settings.', 'reading-progress-bar' )
+				);
+			} );
 	}, [] );
 
 	/**
@@ -61,16 +71,21 @@ const processSettings = () => {
 					posttype: selectedPostType,
 					color,
 					height,
-					fgclor,
 					position,
-					adjustposition
+					adjust_position: adjustPosition,
 				},
 			},
-		} ).then( () => {
-			createSuccessNotice(
-				__( 'Settings saved.', 'reading-progress-bar' )
-			);
-		} );
+		} )
+			.then( () => {
+				createSuccessNotice(
+					__( 'Settings saved.', 'reading-progress-bar' )
+				);
+			} )
+			.catch( () => {
+				createErrorNotice(
+					__( 'Failed to save settings.', 'reading-progress-bar' )
+				);
+			} );
 	};
 
 	return {
@@ -80,11 +95,9 @@ const processSettings = () => {
 		setColor,
 		height,
 		setHeight,
-		fgclor,
-		setFgColor,
 		position,
 		setPosition,
-		adjustposition,
+		adjustPosition,
 		setAdjustPosition,
 		saveSettings,
 	};
