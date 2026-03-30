@@ -18,12 +18,14 @@ import { useDispatch } from '@wordpress/data';
  * Custom hook for managing reading progress bar settings
  *
  * @returns {Object} Settings state and functions
- * @returns {string}   returns.selectedPostType    - Currently selected post type
- * @returns {Function} returns.setSelectedPostType - Update selected post type
+ * @returns {Array}    returns.selectedPostType    - Selected post types (array of slugs)
+ * @returns {Function} returns.setSelectedPostType - Update selected post types
  * @returns {string}   returns.color               - Currently selected background color
  * @returns {Function} returns.setColor            - Update background color
  * @returns {number}   returns.height              - Progress bar height in px
  * @returns {Function} returns.setHeight           - Update height
+ * @returns {string}   returns.fgColor             - Progress bar foreground color
+ * @returns {Function} returns.setFgColor          - Update foreground color
  * @returns {string}   returns.position            - Bar position ('top' or 'bottom')
  * @returns {Function} returns.setPosition         - Update position
  * @returns {number}   returns.adjustPosition      - Offset from edge in px
@@ -31,9 +33,10 @@ import { useDispatch } from '@wordpress/data';
  * @returns {Function} returns.saveSettings        - Save settings to database
  */
 const processSettings = () => {
-	const [ selectedPostType, setSelectedPostType ] = useState( '' );
+	const [ selectedPostType, setSelectedPostType ] = useState( [] );
 	const [ color, setColor ] = useState( '#000000' );
 	const [ height, setHeight ] = useState( 8 );
+	const [ fgColor, setFgColor ] = useState( '#000000' );
 	const [ position, setPosition ] = useState( 'top' );
 	const [ adjustPosition, setAdjustPosition ] = useState( 30 );
 
@@ -46,9 +49,12 @@ const processSettings = () => {
 		apiFetch( { path: '/wp/v2/settings' } )
 			.then( ( settings ) => {
 				const rpb = settings.reading_progress_bar;
-				setSelectedPostType( rpb.posttype );
+			// Handle both array (new format) and string (legacy format) for posttype
+			const postTypes = Array.isArray( rpb.posttype ) ? rpb.posttype : ( rpb.posttype ? [ rpb.posttype ] : [] );
+			setSelectedPostType( postTypes );
 				setColor( rpb.color );
 				setHeight( rpb.height );
+				setFgColor( rpb.foreground_color );
 				setPosition( rpb.position );
 				setAdjustPosition( rpb.adjust_position );
 			} )
@@ -71,6 +77,7 @@ const processSettings = () => {
 					posttype: selectedPostType,
 					color,
 					height,
+					foreground_color: fgColor,
 					position,
 					adjust_position: adjustPosition,
 				},
@@ -95,6 +102,8 @@ const processSettings = () => {
 		setColor,
 		height,
 		setHeight,
+		fgColor,
+		setFgColor,
 		position,
 		setPosition,
 		adjustPosition,

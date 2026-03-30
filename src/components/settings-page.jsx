@@ -3,7 +3,7 @@
  *
  * Main component for the Reading Progress Bar plugin settings page.
  * Renders the full admin UI for configuring: post type, background color,
- * bar height, bar position, and position offset.
+ * foreground color, bar height, bar position, and position offset.
  *
  * Data flow:
  *  - Settings are fetched from /wp/v2/settings on mount via the processSettings hook.
@@ -18,7 +18,7 @@ import {
     __experimentalHeading as Heading,
     __experimentalVStack as VStack,
     Button,
-    RadioControl,
+    CheckboxControl,
     BaseControl,
     RangeControl,
     SelectControl,
@@ -114,13 +114,25 @@ const SettingsPage = () => {
                             { postTypeOptions.length === 0 ? (
                                 <p>{ __( 'No post types available', 'reading-progress-bar' ) }</p>
                             ) : (
-                                <RadioControl
-                                    label={ __( 'Select Post Type', 'reading-progress-bar' ) }
-                                    selected={ selectedPostType }
-                                    options={ postTypeOptions }
-                                    onChange={ setSelectedPostType }
-                                    __next40pxDefaultSize
-                                />
+                                <BaseControl label={ __( 'Select Post Types', 'reading-progress-bar' ) }>
+                                    <div>
+                                        { postTypeOptions.map( ( option ) => (
+                                            <div key={ option.value } style={ { marginBottom: '12px' } }>
+                                                <CheckboxControl
+                                                    label={ option.label }
+                                                    checked={ selectedPostType.includes( option.value ) }
+                                                    onChange={ ( isChecked ) => {
+                                                        if ( isChecked ) {
+                                                            setSelectedPostType( [ ...selectedPostType, option.value ] );
+                                                        } else {
+                                                            setSelectedPostType( selectedPostType.filter( ( type ) => type !== option.value ) );
+                                                        }
+                                                    } }
+                                                />
+                                            </div>
+                                        ) ) }
+                                    </div>
+                                </BaseControl>
                             ) }
                         </PanelRow>
 
@@ -132,6 +144,19 @@ const SettingsPage = () => {
                                         colors={ colorPalette }
                                         value={ color }
                                         onChange={ setColor }
+                                    />
+                                </div>
+                            </BaseControl>
+                        </PanelRow>
+
+                        { /* Foreground (text/indicator) color of the progress bar */ }
+                        <PanelRow>
+                            <BaseControl label={ __( 'Select Foreground Color', 'reading-progress-bar' ) }>
+                                <div style={ { maxWidth: '500px' } }>
+                                    <ColorPalette
+                                        colors={ colorPalette }
+                                        value={ fgColor }
+                                        onChange={ setFgColor }
                                     />
                                 </div>
                             </BaseControl>
