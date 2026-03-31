@@ -97,8 +97,6 @@ const processSettings = () => {
 		setColor,
 		height,
 		setHeight,
-		fgColor,
-		setFgColor,
 		position,
 		setPosition,
 		adjustPosition,
