@@ -28,17 +28,6 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-if (file_exists(plugin_dir_path(__FILE__) . 'vendor/autoload.php')) {
-    require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
-} else {
-    wp_trigger_error(
-        __FUNCTION__,
-        'Reading Progress Bar Plugin: Composer autoload file not found. Please run `composer install`.',
-        E_USER_ERROR
-    );
-    return;
-}
-
 /**
  * Main Reading Progress Bar Plugin Class
  *
