@@ -3,7 +3,7 @@
  *
  * Main component for the Reading Progress Bar plugin settings page.
  * Renders the full admin UI for configuring: post type, background color,
- * foreground color, bar height, bar position, and position offset.
+ * bar height, bar position, and position offset.
  *
  * Data flow:
  *  - Settings are fetched from /wp/v2/settings on mount via the processSettings hook.
@@ -144,19 +144,6 @@ const SettingsPage = () => {
                                         colors={ colorPalette }
                                         value={ color }
                                         onChange={ setColor }
-                                    />
-                                </div>
-                            </BaseControl>
-                        </PanelRow>
-
-                        { /* Foreground (text/indicator) color of the progress bar */ }
-                        <PanelRow>
-                            <BaseControl label={ __( 'Select Foreground Color', 'reading-progress-bar' ) }>
-                                <div style={ { maxWidth: '500px' } }>
-                                    <ColorPalette
-                                        colors={ colorPalette }
-                                        value={ fgColor }
-                                        onChange={ setFgColor }
                                     />
                                 </div>
                             </BaseControl>

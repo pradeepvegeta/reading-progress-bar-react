@@ -202,7 +202,6 @@ class Reading_Progress_Bar
             'height'           => 8,
             'posttype'         => array('post'),
             'color'            => '#000000',
-            'foreground_color' => '#000000',
             'position'         => 'top',
             'adjust_position'  => 30,
         );
@@ -223,10 +222,6 @@ class Reading_Progress_Bar
                     'sanitize_callback' => 'sanitize_key',
                 ),
                 'color' => array(
-                    'type'              => 'string',
-                    'sanitize_callback' => 'sanitize_hex_color',
-                ),
-                'foreground_color' => array(
                     'type'              => 'string',
                     'sanitize_callback' => 'sanitize_hex_color',
                 ),
@@ -291,10 +286,6 @@ class Reading_Progress_Bar
             $sanitized['color'] = \sanitize_hex_color($value['color']);
         }
 
-        if (isset($value['foreground_color'])) {
-            $sanitized['foreground_color'] = \sanitize_hex_color($value['foreground_color']);
-        }
-
         if (isset($value['position'])) {
             $sanitized['position'] = \in_array($value['position'], array('top', 'bottom'), true)
                 ? $value['position']
@@ -313,7 +304,7 @@ class Reading_Progress_Bar
      *
      * Outputs the #progress <div> immediately after <body> opens on singular
      * posts matching the configured post type. All visual properties (color,
-     * foreground color, height, and top/bottom position offset) are compiled
+     * height, and top/bottom position offset) are compiled
      * into an inline style using WP_Style_Engine so the output is minimal and
      * consistent with the block editor's style pipeline.
      *
@@ -340,7 +331,6 @@ class Reading_Progress_Bar
             // stored option was written directly (bypassing the REST sanitize_callback).
             $height          = isset($options['height']) ? \absint($options['height']) : 8;
             $color           = isset($options['color']) ? \sanitize_hex_color($options['color']) : '#000000';
-            $foreground      = isset($options['foreground_color']) ? \sanitize_hex_color($options['foreground_color']) : '#000000';
             $position        = isset($options['position']) && 'bottom' === $options['position'] ? 'bottom' : 'top';
             $adjust_position = isset($options['adjust_position']) ? \absint($options['adjust_position']) : 0;
 
@@ -349,7 +339,6 @@ class Reading_Progress_Bar
             $css = \WP_Style_Engine::compile_css(
                 array(
                     'background' => $color,
-                    'color'      => $foreground,
                     'height'     => $height . 'px',
                     $position    => $adjust_position . 'px',
                 ),
